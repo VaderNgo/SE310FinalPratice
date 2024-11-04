@@ -1,0 +1,43 @@
+﻿@model BaiTap4.Models.TUser
+@{
+    ViewData["Title"] = "SuaNguoiDung";
+    Layout = "~/Areas/Admin/Views/Share/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Sửa thông tin người dùng</h1>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a asp-action="DanhMucNguoiDung" class="btn btn-success">Trở về danh sách</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form asp-action="SuaNguoiDung">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label">Tên đăng nhập</label>
+                            <input asp-for="Username" class="form-control" readonly />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Mật khẩu</label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <input type="hidden" asp-for="LoaiUser" />
+                        <div class="form-group mt-2">
+                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

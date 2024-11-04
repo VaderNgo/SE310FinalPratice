@@ -8,71 +8,94 @@
     Layout = "~/Areas/Admin/Views/Share/_LayoutAdmin.cshtml";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<h3>Danh mục người dùng</h3>
 
-<button class="btn btn-block btn-lg btn-gradient-primary mt-4">
-    <a asp-action="ThemSanPhamMoi">Create New</a>
-</button>
-<p>@TempData["Message"]</p>
-<table class="table">
-    <thead>
-        <tr class="table-warning">
-            <th>
-                Tài khoản
-            </th>
-            <th>
-                Mật khẩu
-            </th>
-            <th>
-                Loại tài khoản
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int i = 0;
-            string cls = "table-success";
-        }
-        @foreach (var item in Model)
+<div class="container-fluid">
+    <h3 class="mt-4">Danh mục người dùng</h3>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <a asp-action="ThemNguoiDung" class="btn btn-gradient-primary">
+                <i class="mdi mdi-plus"></i> Thêm người dùng mới
+            </a>
+        </div>
+
+        @if (TempData["Message"] != null)
         {
-            i = i + 1;
-            if (i % 2 == 0)
-            {
-                cls = "table-primary";
-            }
-            else
-            {
-                cls = "table-success";
-            }
-            <tr class="@cls">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LoaiUser)
-                </td>
-                <td>
-                    <a asp-action="SuaSanPham" asp-route-maSanPham="@item.Username">Edit</a> |
-                    <a asp-action="XoaSanPham" asp-route-maSanPham="@item.Username">Delete</a>
-                </td>
-            </tr>
+                <div class="alert alert-info">
+                @TempData["Message"]
+                </div>
         }
-    </tbody>
-</table>
-@Html.PagedListPager(
-            Model,
-            page => Url.Action("DanhMucNguoiDung",
-            new
-            {
-                page = page
-            }
-            ),
-            new PagedListRenderOptions()
-        {
-            LiElementClasses = new string[] { "page-item" },
-            PageClasses = new string[] { "page-link" },
-        })  
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-warning">
+                            <th>Tài khoản</th>
+                            <th>Mật khẩu</th>
+                            <th>Loại tài khoản</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            string cls = "table-success";
+                        }
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                            cls = i % 2 == 0 ? "table-primary" : "table-success";
+                                <tr class="@cls">
+                                    <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                                    <td>
+                                    @if (item.LoaiUser == 1)
+                                    {
+                                                <span>Admin</span>
+                                    }
+                                    else
+                                    {
+                                                <span>Người dùng</span>
+                                    }
+                                    </td>
+                                    <td>
+                                        <a asp-action="SuaNguoiDung" asp-route-username="@item.Username" 
+                                           class="btn btn-warning btn-sm">
+                                            <i class="mdi mdi-pencil"></i> Sửa
+                                        </a>
+                                        <a asp-action="XoaNguoiDung" asp-route-username="@item.Username"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">
+                                            <i class="mdi mdi-delete"></i> Xóa
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                @Html.PagedListPager(
+                             Model,
+                             page => Url.Action("DanhMucNguoiDung", new { page }),
+                             new PagedListRenderOptions
+                    {
+                        LiElementClasses = new string[] { "page-item" },
+                        PageClasses = new string[] { "page-link" },
+                        UlElementClasses = new string[] { "pagination", "justify-content-center", "mt-3" }
+                    })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+            // Highlight current page in pagination
+            $(document).ready(function() {
+                $('.pagination .active a').addClass('bg-primary text-white');
+            });
+        </script>
+}

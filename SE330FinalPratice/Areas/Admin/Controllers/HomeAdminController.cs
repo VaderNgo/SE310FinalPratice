@@ -124,5 +124,104 @@ namespace BaiTap4.Areas.Admin.Controllers
             ViewBag.anhSanPham = anhSanPham;
             return View(sanpham);
         }
+
+        [Route("ThemNguoiDung")]
+        [HttpGet]
+        [Authentication]
+        public IActionResult ThemNguoiDung()
+        {
+            return View();
+        }
+
+        [Route("ThemNguoiDung")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ThemNguoiDung(TUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if username already exists
+                var existingUser = db.TUsers.FirstOrDefault(u => u.Username == user.Username);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Username", "Tên đăng nhập đã tồn tại");
+                    return View(user);
+                }
+
+                // Set default user type to regular user (0)
+                user.LoaiUser = 0;
+                db.TUsers.Add(user);
+                db.SaveChanges();
+                TempData["Message"] = "Thêm người dùng thành công";
+                return RedirectToAction("DanhMucNguoiDung");
+            }
+            return View(user);
+        }
+
+        [Route("SuaNguoiDung")]
+        [HttpGet]
+        [Authentication]
+        public IActionResult SuaNguoiDung(string username)
+        {
+            var user = db.TUsers.Find(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        [Route("SuaNguoiDung")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SuaNguoiDung(TUser user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();
+                    TempData["Message"] = "Cập nhật người dùng thành công";
+                    return RedirectToAction("DanhMucNguoiDung");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!db.TUsers.Any(e => e.Username == user.Username))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return View(user);
+        }
+
+        [Route("XoaNguoiDung")]
+        [HttpGet]
+        [Authentication]
+        public IActionResult XoaNguoiDung(string username)
+        {
+            var user = db.TUsers.Find(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                db.TUsers.Remove(user);
+                db.SaveChanges();
+                TempData["Message"] = "Xóa người dùng thành công";
+            }
+            catch (Exception)
+            {
+                TempData["Message"] = "Không thể xóa người dùng này";
+            }
+            return RedirectToAction("DanhMucNguoiDung");
+        }
     }
 }
