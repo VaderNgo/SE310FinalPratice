@@ -8,89 +8,108 @@
     Layout = "~/Areas/Admin/Views/Share/_LayoutAdmin.cshtml";
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<h3>Danh mục các sản phẩm</h3>
 
-<button class="btn btn-block btn-lg btn-gradient-primary mt-4">
-    <a asp-action="ThemSanPhamMoi" >Create New</a>
-</button>
-<p>@TempData["Message"]</p>
-<table class="table">
-    <thead>
-        <tr class="table-warning">
-            <th>
-               Tên sản phẩm
-            </th>
-            <th>
-               Cân nặng
-            </th>
-            <th>
-                Độ nổi
-            </th>
-            <th>
-               Thời gian bảo hành
-            </th>
-            <th>
-                Giá nhỏ nhất
-            </th>
-            <th>
-                Giá lớn nhất
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int i = 0;
-            string cls = "table-success";
-        }
-@foreach (var item in Model) {
-            i = i + 1;
-            if(i%2 == 0)
-            {
-                cls = "table-primary";
-            } 
-            else
-            {
-                cls = "table-success";
-            }
-            <tr class="@cls">
-            <td>
-                @Html.DisplayFor(modelItem => item.TenSp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CanNang)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DoNoi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThoiGianBaoHanh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GiaNhoNhat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GiaLonNhat)
-            </td>
-            <td>
-                <a asp-action="SuaSanPham" asp-route-maSanPham="@item.MaSp">Edit</a> |
-                <a asp-action="ChiTietSanPham" asp-route-maSanPham="@item.MaSp">Details</a> |
-                <a asp-action="XoaSanPham" asp-route-maSanPham="@item.MaSp">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-@Html.PagedListPager(
-        Model,
-        page => Url.Action("DanhMucSanPham",
-        new
+<div class="container-fluid">
+    <h3 class="mt-4">Danh mục sản phẩm</h3>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <a asp-action="ThemSanPhamMoi" class="btn btn-gradient-primary">
+                <i class="mdi mdi-plus"></i> Thêm sản phẩm mới
+            </a>
+        </div>
+
+        @if (TempData["Message"] != null)
         {
-           page = page
+                <div class="alert alert-info">
+                @TempData["Message"]
+                </div>
         }
-        ),
-        new PagedListRenderOptions()
-    {
-       LiElementClasses = new string[] { "page-item" },
-       PageClasses = new string[] { "page-link" },
-    })  
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-warning">
+                            <th>Tên sản phẩm</th>
+                            <th>Cân nặng</th>
+                            <th>Độ nổi</th>
+                            <th>Thời gian bảo hành</th>
+                            <th>Giá nhỏ nhất</th>
+                            <th>Giá lớn nhất</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            string cls = "table-success";
+                        }
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                            cls = i % 2 == 0 ? "table-primary" : "table-success";
+                                <tr class="@cls">
+                                    <td>@Html.DisplayFor(modelItem => item.TenSp)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.CanNang)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.DoNoi)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ThoiGianBaoHanh)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.GiaNhoNhat)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.GiaLonNhat)</td>
+                                    <td>
+                                        <a asp-action="SuaSanPham" asp-route-maSanPham="@item.MaSp" 
+                                           class="btn btn-warning btn-sm">
+                                            <i class="mdi mdi-pencil"></i> Sửa
+                                        </a>
+                                        <a asp-action="ChiTietSanPham" asp-route-maSanPham="@item.MaSp" 
+                                           class="btn btn-info btn-sm">
+                                            <i class="mdi mdi-eye"></i> Chi tiết
+                                        </a>
+                                        <a asp-action="XoaSanPham" asp-route-maSanPham="@item.MaSp"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                            <i class="mdi mdi-delete"></i> Xóa
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                @Html.PagedListPager(
+                             Model,
+                             page => Url.Action("DanhMucSanPham", new { page }),
+                             new PagedListRenderOptions
+                    {
+                        LiElementClasses = new string[] { "page-item" },
+                        PageClasses = new string[] { "page-link" },
+                        UlElementClasses = new string[] { "pagination", "justify-content-center", "mt-3" }
+                    })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+            // Format currency for price columns
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add VND format to price columns
+                const priceElements = document.querySelectorAll('td:nth-child(5), td:nth-child(6)');
+                priceElements.forEach(element => {
+                    const price = parseFloat(element.textContent);
+                    if (!isNaN(price)) {
+                        element.textContent = new Intl.NumberFormat('vi-VN', { 
+                            style: 'currency', 
+                            currency: 'VND' 
+                        }).format(price);
+                    }
+                });
+
+                // Highlight current page in pagination
+                $('.pagination .active a').addClass('bg-primary text-white');
+            });
+        </script>
+}
