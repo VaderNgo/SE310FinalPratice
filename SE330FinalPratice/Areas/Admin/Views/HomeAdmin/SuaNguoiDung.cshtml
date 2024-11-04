@@ -3,7 +3,7 @@
     ViewData["Title"] = "SuaNguoiDung";
     Layout = "~/Areas/Admin/Views/Share/_LayoutAdmin.cshtml";
 }
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <div class="container-fluid">
     <h1 class="mt-4">Sửa thông tin người dùng</h1>
     <div class="card mb-4">
@@ -13,7 +13,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <form asp-action="SuaNguoiDung">
+                    <form asp-action="SuaNguoiDung" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label class="control-label">Tên đăng nhập</label>
@@ -21,8 +21,9 @@
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Mật khẩu</label>
-                            <input asp-for="Password" class="form-control" />
+                            <label class="control-label">Mật khẩu mới</label>
+                            <input asp-for="Password" type="password" class="form-control"
+                                   placeholder="Để trống nếu không muốn thay đổi mật khẩu" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <input type="hidden" asp-for="LoaiUser" />
@@ -35,6 +36,13 @@
         </div>
     </div>
 </div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 
 @section Scripts {
     @{

@@ -138,22 +138,34 @@ namespace BaiTap4.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ThemNguoiDung(TUser user)
         {
-            if (ModelState.IsValid)
+            try
             {
-                // Check if username already exists
-                var existingUser = db.TUsers.FirstOrDefault(u => u.Username == user.Username);
-                if (existingUser != null)
+                if (ModelState.IsValid)
                 {
-                    ModelState.AddModelError("Username", "Tên đăng nhập đã tồn tại");
-                    return View(user);
-                }
+                    var existingUser = db.TUsers.FirstOrDefault(u => u.Username == user.Username);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError("Username", "Tên đăng nhập đã tồn tại");
+                        return View(user);
+                    }
 
-                // Set default user type to regular user (0)
-                user.LoaiUser = 0;
-                db.TUsers.Add(user);
-                db.SaveChanges();
-                TempData["Message"] = "Thêm người dùng thành công";
-                return RedirectToAction("DanhMucNguoiDung");
+                    if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+                    {
+                        ModelState.AddModelError("", "Username and Password are required");
+                        return View(user);
+                    }
+
+                    user.LoaiUser = 0;
+                    db.TUsers.Add(user);
+                    db.SaveChanges();
+
+                    TempData["Message"] = "Thêm người dùng thành công";
+                    return RedirectToAction("DanhMucNguoiDung");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error occurred while creating user: " + ex.Message);
             }
             return View(user);
         }
