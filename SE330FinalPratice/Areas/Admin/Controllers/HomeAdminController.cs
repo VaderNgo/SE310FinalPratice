@@ -114,5 +114,15 @@ namespace BaiTap4.Areas.Admin.Controllers
             return RedirectToAction("DanhMucSanPham", "HomeAdmin");
 
         }
+
+        [Route("ChiTietSanPham")]
+        [HttpGet]
+        public IActionResult ChiTietSanPham(String maSanPham)
+        {
+            var sanpham = db.TDanhMucSps.SingleOrDefault(x => x.MaSp == maSanPham);
+            var anhSanPham = db.TAnhSps.Where(x => x.MaSp == maSanPham).ToList();
+            ViewBag.anhSanPham = anhSanPham;
+            return View(sanpham);
+        }
     }
 }

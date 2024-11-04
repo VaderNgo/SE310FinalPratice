@@ -1,0 +1,141 @@
+﻿@model BaiTap4.Models.TDanhMucSp
+
+@{
+    ViewData["Title"] = "ChiTietSanPham";
+    Layout = "~/Areas/Admin/Views/Share/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Chi Tiết Sản Phẩm</h4>
+                    <div>
+                        <a href="javascript:history.back()" class="btn btn-outline-primary btn-sm">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Product Images Section -->
+                    <div class="col-lg-6 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="product-image-main mb-3">
+                                    <img src="@Url.Content("~/ProductsImages/Images/" + Model.AnhDaiDien)"
+                                         class="img-fluid rounded"
+                                         alt="@Model.TenSp">
+                                </div>
+                                <div class="product-image-thumbs row">
+                                    @foreach (var image in ViewBag.anhSanPham)
+                                    {
+                                        <div class="col-3 mb-2">
+                                            <img src="@Url.Content("~/ProductsImages/Images/" + image.TenFileAnh)"
+                                                 class="img-fluid rounded cursor-pointer"
+                                                 onclick="updateMainImage(this.src)"
+                                                 alt="Product thumbnail">
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Details Section -->
+                    <div class="col-lg-6 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="font-weight-bold mb-3">@Model.TenSp</h3>
+                                
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="text-warning">
+                                        <i class="mdi mdi-star"></i>
+                                        <i class="mdi mdi-star"></i>
+                                        <i class="mdi mdi-star"></i>
+                                        <i class="mdi mdi-star"></i>
+                                        <i class="mdi mdi-star-half"></i>
+                                    </div>
+                                    <span class="text-muted ml-2">(18 đánh giá)</span>
+                                </div>
+
+                                <h4 class="text-primary mb-3">@String.Format("{0:N0}đ", Model.GiaLonNhat)</h4>
+
+                                <div class="mb-4">
+                                    <h5 class="font-weight-bold">Mô tả sản phẩm:</h5>
+                                    <p class="text-muted">@Model.GioiThieuSp</p>
+                                </div>
+
+                                <div class="product-meta">
+                                    <div class="d-flex border-bottom py-2">
+                                        <span class="font-weight-bold" style="width: 150px;">Trạng thái:</span>
+                                        <span class="text-success">Còn hàng</span>
+                                    </div>
+                                    <div class="d-flex border-bottom py-2">
+                                        <span class="font-weight-bold" style="width: 150px;">Vận chuyển:</span>
+                                        <span>1-2 ngày <span class="text-success">(Miễn phí vận chuyển)</span></span>
+                                    </div>
+                                    <div class="d-flex border-bottom py-2">
+                                        <span class="font-weight-bold" style="width: 150px;">Khối lượng:</span>
+                                        <span>0.5 kg</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <h5 class="font-weight-bold mb-3">Chia sẻ sản phẩm:</h5>
+                                    <div class="d-flex gap-2">
+                                        <a href="#" class="btn btn-social-icon btn-facebook"><i class="mdi mdi-facebook"></i></a>
+                                        <a href="#" class="btn btn-social-icon btn-twitter"><i class="mdi mdi-twitter"></i></a>
+                                        <a href="#" class="btn btn-social-icon btn-instagram"><i class="mdi mdi-instagram"></i></a>
+                                        <a href="#" class="btn btn-social-icon btn-pinterest"><i class="mdi mdi-pinterest"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Additional Information -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#description" role="tab">Mô tả</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#information" role="tab">Thông tin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#reviews" role="tab">Đánh giá (1)</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content mt-3">
+                            <div class="tab-pane fade show active" id="description" role="tabpanel">
+                                <h6 class="font-weight-bold mb-3">Thông tin sản phẩm</h6>
+                                <p class="text-muted">@Model.GioiThieuSp</p>
+                            </div>
+                            <div class="tab-pane fade" id="information" role="tabpanel">
+                                <h6 class="font-weight-bold mb-3">Thông tin chi tiết</h6>
+                                <p class="text-muted">@Model.GioiThieuSp</p>
+                            </div>
+                            <div class="tab-pane fade" id="reviews" role="tabpanel">
+                                <h6 class="font-weight-bold mb-3">Đánh giá từ khách hàng</h6>
+                                <p class="text-muted">@Model.GioiThieuSp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateMainImage(src) {
+            document.querySelector('.product-image-main img').src = src;
+        }
+    </script>
+}
